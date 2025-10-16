@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## PCG - Conversor de Imagens para Escala de Cinza (Frontend)
 
-## Getting Started
+Aplicação web em Next.js para converter imagens coloridas em escala de cinza utilizando uma API externa. O usuário pode enviar uma imagem, escolher a técnica de conversão e baixar o resultado.
 
-First, run the development server:
+### Demo local
+- URL local: `http://localhost:3000`
+
+### Tecnologias
+- Next.js (App Router)
+- React + TypeScript
+- Tailwind CSS
+
+## Funcionalidades
+- Upload por clique ou arrastar/soltar
+- Pré-visualização da imagem original
+- Seleção da técnica de conversão
+- Parâmetros condicionais para técnicas específicas
+- Exibição e download da imagem convertida
+- Tratamento de erro e estado de carregamento
+
+## Como rodar
+Requisitos: Node.js 18+ e pnpm (ou npm/yarn).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# instalar deps
+pnpm install
+
+# rodar em desenvolvimento
 pnpm dev
-# or
-bun dev
+
+# build de produção
+pnpm build
+
+# iniciar produção (após build)
+pnpm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Acesse `http://localhost:3000` no navegador.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Integração com a API de Grayscale
+Este frontend consome a API pública:
+`https://apigrayfy.onrender.com/grayscale`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Envio:
+- Método: POST
+- Body: `multipart/form-data` com o campo `image` (arquivo da imagem)
+- Query params: `technique` e parâmetros opcionais conforme a técnica
 
-## Learn More
+Resposta:
+- A API pode retornar JSON (com Base64/URL) ou binário. O app lida com ambos.
 
-To learn more about Next.js, take a look at the following resources:
+### Técnicas suportadas e parâmetros
+- `average` (alias: `avg`)
+  - Fórmula: (R + G + B) / 3
+  - Ex: `?technique=average`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `luminosity` (alias: `luma`, `bt709`)
+  - Fórmula: 0.2126 R + 0.7152 G + 0.0722 B
+  - Ex: `?technique=luminosity`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `lightness`
+  - Fórmula: (max(R,G,B) + min(R,G,B)) / 2
+  - Ex: `?technique=lightness`
 
-## Deploy on Vercel
+- `desaturation`
+  - Igual ao `lightness`
+  - Ex: `?technique=desaturation`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `single_channel`
+  - Mantém apenas um canal: `r`, `g` ou `b`
+  - Params: `channel=r|g|b`
+  - Ex: `?technique=single_channel&channel=r`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `weighted`
+  - Define pesos manualmente (R, G, B) via `weights=wr,wg,wb`
+  - Ex: `?technique=weighted&weights=0.3,0.5,0.2`
+  - Sugestão BT.709: `0.2126,0.7152,0.0722`
+
+## Onde editar
+- Componente principal: `src/components/ImageUploader.tsx`
+- Página inicial: `src/app/page.tsx`
+
+## Deploy
+Qualquer provider compatível com Next.js (Vercel recomendado).
+
+Passos gerais:
+```bash
+pnpm build
+# subir a pasta .next/. Ver documentação do provedor escolhido
+```
+
+## Licença
+Este projeto é acadêmico/educacional. 

@@ -65,14 +65,14 @@ export default function Navbar() {
                                 <div className="py-1">
                                     
                                     <a
-                                        href="https://github.com"
+                                        href="https://github.com/JoaoThiagoNunes/app"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
                                         onClick={() => setIsMenuOpen(false)}
                                     >
                                         <Image
-                                            src="/_next/static/media/github.svg"
+                                            src="/_next/static/media/github.png"
                                             alt="GitHub"
                                             width={16}
                                             height={16}
